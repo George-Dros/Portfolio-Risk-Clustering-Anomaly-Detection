@@ -7,7 +7,7 @@ Uncovering hidden asset relationships and surfacing abnormal risk behavior using
 ## Project Overview
 
 This project explores patterns of financial risk by analyzing stocks from the **S&P 500** and **FTSE 100** indices.  
-Using dimensionality reduction and unsupervised clustering techniques, we group stocks based on volatility, correlation, and other statistical properties — and detect outliers with unusual behavior.
+Using dimensionality reduction and unsupervised clustering techniques, we group stocks based on volatility, correlation, and other statistical properties and detect outliers with unusual behavior.
 
 The goal: provide insights for portfolio construction, risk management, and anomaly detection.
 
@@ -35,7 +35,7 @@ The goal: provide insights for portfolio construction, risk management, and anom
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 portfolio-risk-clustering/
@@ -59,7 +59,7 @@ portfolio-risk-clustering/
 
 ---
 
-## 📈 Pipeline Summary
+## Pipeline Summary
 
 ### Phase 1 – Data Collection & Cleaning
 - Retrieved 5-year OHLCV data for S&P 500 and FTSE 100 via `yfinance`

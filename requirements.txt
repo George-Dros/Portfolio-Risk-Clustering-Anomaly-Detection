@@ -9,3 +9,4 @@ hdbscan
 scipy
 joblib
 notebook
+streamlit
