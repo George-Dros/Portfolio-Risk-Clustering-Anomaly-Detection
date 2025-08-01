@@ -9,7 +9,7 @@ Uncovering hidden asset relationships and surfacing abnormal risk behavior using
 This project explores patterns of financial risk by analyzing stocks from the **S&P 500** and **FTSE 100** indices.  
 Using dimensionality reduction and unsupervised clustering techniques, we group stocks based on volatility, correlation, and other statistical properties and detect outliers with unusual behavior.
 
-The goal: provide insights for portfolio construction, risk management, and anomaly detection.
+The goal: provide insights for portfolio construction, risk management, and anomaly detection — **now available through an interactive Streamlit dashboard**.
 
 ---
 
@@ -19,20 +19,20 @@ The goal: provide insights for portfolio construction, risk management, and anom
 |--------------|-------------------------------------------------------------|
 | **Data**     | `yfinance`, `pandas`, `numpy`                               |
 | **ML**       | `scikit-learn`, `umap-learn`, `hdbscan`, `statsmodels`      |
-| **Visuals**  | `matplotlib`, `seaborn`                                     |
+| **Visuals**  | `matplotlib`, `seaborn`, `Streamlit`                        |
 | **Notebook** | `JupyterLab`, `joblib`, `pickle`                            |
+| **App**      | `Streamlit`, `Python`                                       |
 | **Repo**     | `GitHub`, `Markdown`                                        |
 
 ---
 
 ## Core Methods
 
-- **Feature Engineering**: returns, volatility, drawdowns, skewness, kurtosis, Sharpe ratio, correlation
+- **Feature Engineering**: log returns, rolling volatility, drawdowns, skewness, kurtosis, Sharpe ratio, correlation
 - **Dimensionality Reduction**: PCA, UMAP
 - **Clustering**: HDBSCAN
-- **Anomaly Detection**: HDBSCAN outliers flagged for further analysis
-- **Visualizations**: cluster maps, anomaly overlays, Sharpe ratio gradients
-
+- **Anomaly Detection**: based on Sharpe z-score within clusters
+- **Visualization**: cluster scatter plots, heatmaps, anomaly z-scores, interactive breakdowns
 ---
 
 ## Project Structure
@@ -41,21 +41,98 @@ The goal: provide insights for portfolio construction, risk management, and anom
 portfolio-risk-clustering/
 │
 ├── data/
-│   ├── raw/                   # Raw OHLCV data (from yfinance)
-│   ├── processed/             # Cleaned returns and metrics per asset
-│   └── outputs/               # Cluster results, PCA/UMAP coordinates
+│   ├── raw/                     # Raw OHLCV data (from yfinance)
+│   ├── processed/               # Feature summaries and cluster outputs
 │
-├── notebooks/
-│   ├── 1_data_collection.ipynb         # Ticker selection and OHLCV retrieval
-│   ├── 2_feature_engineering.ipynb     # Returns, volatility, drawdowns, Sharpe
-│   ├── 3_dimensionality_clustering.ipynb  # PCA, UMAP, HDBSCAN analysis
-│   └── 4_insights_and_anomalies.ipynb  # Cluster analysis and anomaly detection
+├── notebooks/                  # Exploratory analysis notebooks
+│   ├── 1.Data_Retrieval.ipynb
+│   ├── 2.Feature_Engineering.ipynb
+│   ├── 3.Dimensionality_Reduction_&_Clustering.ipynb
+│   └── 4.Insights.ipynb
 │
-├── .gitignore
+├── scripts/                    # Streamlit dashboard code
+│   ├── app.py
+│   ├── data_loader.py
+│   └── visuals.py
+│
+├── requirements.txt
 ├── README.md
-└── requirements.txt
+└── LICENSE
 ```
 
+
+---
+
+## Streamlit Dashboard
+
+A responsive web app for visualizing clustering results, surfacing anomalies, and exploring asset risk metrics interactively.
+
+Main Features:
+
+- **Index Selection**: Switch between S&P 500 and FTSE 100
+- **Cluster Summary**: Pie charts, feature distribution per cluster
+- **UMAP Visualizer**: 2D projection of risk clusters
+- **Anomaly Explorer**: Filter outliers using z-score, inspect feature profile and Sharpe z-distribution
+- **Correlation Matrix**: Feature-wise relationships per index
+- **Full Feature Table**: Sort and inspect all computed metrics
+
+
+**Sidebar Filters**
+
+The sidebar lets users toggle between indices (S&P 500 / FTSE 100), enable or disable outliers, filter by cluster, and dynamically adjust the Sharpe Ratio anomaly threshold. These controls update the visuals across the dashboard tabs.
+
+---
+
+## Dashboard Tabs
+
+### 1. **Overview & Summary**
+- Project summary and metrics
+- Cluster pie chart and anomaly count
+
+Example:
+
+![Dashboard Overview](screenshots/dashboard.png)
+![Cluster Distribution Pie](screenshots/clusters_pie_chart.png)
+
+---
+
+### 2. **Interactive UMAP Cluster Explorer**
+- Visualize stocks in 2D UMAP space, colored by cluster
+- Hover and label tickers for exploration
+
+Example:
+
+![UMAP Clusters](screenshots/umap_clusters.png)
+
+---
+
+### 3. **Anomaly Detection Explorer**
+- Adjustable z-score threshold to detect Sharpe Ratio anomalies
+- Select anomaly to view:
+  - Individual feature breakdown (bar chart)
+  - Z-score placement in cluster
+
+Example:
+
+![Z-Score Distribution](screenshots/z-score_distribution.png)
+
+---
+
+### 4. **Cluster Profiles & Comparison**
+- Heatmap of average metrics per cluster
+- Boxplots of feature distributions across clusters
+
+Example:
+
+![Cluster Heatmap](screenshots/heatmap_cluster.png)
+
+---
+
+To launch the app:
+
+```
+streamlit run scripts/app.py
+```
 
 ---
 
@@ -82,13 +159,18 @@ portfolio-risk-clustering/
 - Compared S&P 500 vs FTSE 100 risk behavior
 - Derived conclusions on risk concentration and market dynamics
 
+### Phase 5 – Streamlit App Deployment
+
+- Created multi-tab dashboard with full interactivity
+- Enabled data exploration across risk metrics and cluster behavior
+
 ---
 
 ## Key Insights
 
 ### S&P 500
-- Formed ~4-5 clusters of similar risk profiles
-- Several outliers displayed abnormal volatility or highly negative Sharpe ratios (e.g., specific tech or biotech stocks)
+- Clusters reveal common risk profiles (e.g., tech vs energy)
+- High outlier rate among biotech and speculative tech stocks
 
 ### FTSE 100
 - Showed more conservative clustering with tighter Sharpe ratios
@@ -97,30 +179,22 @@ portfolio-risk-clustering/
 
 ---
 
-## (Optional Enhancements)
-
-- Add **Isolation Forest** or **Elliptic Envelope** for statistical anomaly detection
-- Deploy **interactive Streamlit dashboard**
-- Add **macroeconomic overlays** (e.g., VIX, CPI) for anomaly context
-
----
-
 ## How to Use
 
-1. Clone the repo  
+1. Clone the repository  
 2. Create environment and install dependencies:
    ```bash
    pip install -r requirements.txt
    ```
 Run notebooks in order:
 ```
-    1. Data Cleaning.ipynb
+1.Data_Retrieval.ipynb
 
-    2. Feature Engineering.ipynb
+2.Feature_Engineering.ipynb
 
-    3. ML & Clustering.ipynb
+3.Dimensionality_Reduction_&_Clustering_of_Portfolio_Risk_Features.ipynb
 
-    4. Insights.ipynb
+4.Insights_&_Anomaly_Detection.ipynb
 ```
 
 ## Author
