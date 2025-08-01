@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import umap.umap_ as umap
 from sklearn.preprocessing import StandardScaler
+import hdbscan
 
 def retrieve_data(index):
     if index == "SP500":
@@ -28,5 +29,9 @@ def umap_embedding(scaled_features, summary_df):
     tickers = summary_df.index.tolist()
     x = umap_embedding[:, 0]
     y = umap_embedding[:, 1]
-    return x, y, tickers
-    
+    return x, y, tickers, umap_embedding
+
+def clustering(umap_embedding):
+    clusterer = hdbscan.HDBSCAN(min_cluster_size=2, min_samples=1)
+    cluster_labels = clusterer.fit_predict(umap_embedding)    
+    return cluster_labels
