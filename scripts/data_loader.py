@@ -4,16 +4,28 @@ import umap.umap_ as umap
 from sklearn.preprocessing import StandardScaler
 import hdbscan
 
+import os
+import pandas as pd
+import numpy as np
+import umap.umap_ as umap
+from sklearn.preprocessing import StandardScaler
+import hdbscan
+
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+DATA_DIR = os.path.join(BASE_DIR, "data", "processed")
+
 def retrieve_data(index):
     if index == "SP500":
-        summary_df = pd.read_pickle("/data/processed/sp500_summary.pkl")
-        df_clusters = pd.read_pickle("/data/processed/df_clusters_sp500.pkl")
-    if index == "FTSE100":        
-        summary_df = pd.read_pickle("/data/processed/ftse100_summary.pkl")
-        df_clusters = pd.read_pickle("/data/processed/df_clusters_ftse100.pkl")
+        summary_df = pd.read_pickle(os.path.join(DATA_DIR, "sp500_summary.pkl"))
+        df_clusters = pd.read_pickle(os.path.join(DATA_DIR, "df_clusters_sp500.pkl"))
+    elif index == "FTSE100":
+        summary_df = pd.read_pickle(os.path.join(DATA_DIR, "ftse100_summary.pkl"))
+        df_clusters = pd.read_pickle(os.path.join(DATA_DIR, "df_clusters_ftse100.pkl"))
+    
     scaler = StandardScaler()
     scaled_features = scaler.fit_transform(summary_df)
-    return summary_df, df_clusters, scaled_features    
+    return summary_df, df_clusters, scaled_features
+
 
 def compute_anomalies(df, threshold=1.5):
     df = df.copy()
