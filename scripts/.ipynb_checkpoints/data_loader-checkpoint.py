@@ -6,11 +6,11 @@ import hdbscan
 
 def retrieve_data(index):
     if index == "SP500":
-        summary_df = pd.read_pickle("../data/processed/sp500_summary.pkl")
-        df_clusters = pd.read_pickle("../data/processed/df_clusters_sp500.pkl")
+        summary_df = pd.read_pickle("/data/processed/sp500_summary.pkl")
+        df_clusters = pd.read_pickle("/data/processed/df_clusters_sp500.pkl")
     if index == "FTSE100":        
-        summary_df = pd.read_pickle("../data/processed/ftse100_summary.pkl")
-        df_clusters = pd.read_pickle("../data/processed/df_clusters_ftse100.pkl")
+        summary_df = pd.read_pickle("/data/processed/ftse100_summary.pkl")
+        df_clusters = pd.read_pickle("/data/processed/df_clusters_ftse100.pkl")
     scaler = StandardScaler()
     scaled_features = scaler.fit_transform(summary_df)
     return summary_df, df_clusters, scaled_features    
